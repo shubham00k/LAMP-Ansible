@@ -1,0 +1,17 @@
+- name: Deploy LAMP stack on Ubuntu (AWS)
+  hosts: ubuntu_aws
+  become: true
+  roles:
+    - common
+    - apache
+    - mysql
+    - php
+
+- name: Deploy LAMP stack on AlmaLinux (VirtualBox)
+  hosts: alma
+  become: true
+  roles:
+    - common
+    - apache
+    - mysql
+    - php

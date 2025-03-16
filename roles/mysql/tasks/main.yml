@@ -1,0 +1,25 @@
+- name: Install MySQL (Ubuntu)
+  ansible.builtin.apt:
+    name: mysql-server
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Install MySQL (AlmaLinux)
+  ansible.builtin.dnf:
+    name: mariadb-server
+    state: present
+  when: ansible_os_family == "RedHat"
+
+- name: Start and enable MySQL (Ubuntu)
+  ansible.builtin.service:
+    name: mysql
+    state: started
+    enabled: true
+  when: ansible_os_family == "Debian"
+
+- name: Start and enable MySQL (AlmaLinux)
+  ansible.builtin.service:
+    name: mariadb
+    state: started
+    enabled: true
+  when: ansible_os_family == "RedHat"

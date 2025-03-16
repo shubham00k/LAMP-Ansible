@@ -1,0 +1,27 @@
+- name: Install PHP (Ubuntu)
+  ansible.builtin.apt:
+    name:
+      - php
+      - php-mysql
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Install PHP (AlmaLinux)
+  ansible.builtin.dnf:
+    name:
+      - php
+      - php-mysqlnd
+    state: present
+  when: ansible_os_family == "RedHat"
+
+- name: Restart Apache to load PHP (Ubuntu)
+  ansible.builtin.service:
+    name: apache2
+    state: restarted
+  when: ansible_os_family == "Debian"
+
+- name: Restart Apache to load PHP (AlmaLinux)
+  ansible.builtin.service:
+    name: httpd
+    state: restarted
+  when: ansible_os_family == "RedHat"

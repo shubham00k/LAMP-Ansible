@@ -1,0 +1,52 @@
+---
+- name: Install Apache (Ubuntu)
+  ansible.builtin.apt:
+    name: apache2
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Install Apache (AlmaLinux)
+  ansible.builtin.dnf:
+    name: httpd
+    state: present
+  when: ansible_os_family == "RedHat"
+
+- name: Start and enable Apache (Ubuntu)
+  ansible.builtin.service:
+    name: apache2
+    state: started
+    enabled: true
+  when: ansible_os_family == "Debian"
+
+- name: Start and enable Apache (AlmaLinux)
+  ansible.builtin.service:
+    name: httpd
+    state: started
+    enabled: true
+  when: ansible_os_family == "RedHat"
+
+- name: Copy PHP app to web root
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/files/todo-app/"
+    dest: /var/www/html/
+    mode: '0755'
+
+- name: Ensure HTTP port is open (Ubuntu)
+  community.general.ufw:
+    rule: allow
+    port: '80'
+    proto: tcp
+  when: ansible_os_family == "Debian"
+
+- name: Ensure HTTP port is open (AlmaLinux)
+  ansible.posix.firewalld:
+    service: http
+    permanent: true
+    state: enabled
+    immediate: true
+  when: ansible_os_family == "RedHat"
+
+- name: Remove default Apache page
+  ansible.builtin.file:
+    path: /var/www/html/index.html
+    state: absent
